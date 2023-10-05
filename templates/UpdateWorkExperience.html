@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Applicant Work Experience Update</title>
+  </head>
+  <body>
+    <form action="/UpdateWorkExperience/{{allWorkExperience.sno}}" method="POST">
+      <h1 align="center">Work Experience Update</h1>
+      <div class="container">
+
+        <h3>Experience 1</h3><hr>
+
+        <div class="col-md-2">
+      <label for="inputcn1" class="form-label">Company Name</label>
+      <input type="text" class="form-control" id="inputcn1" name="companyName1">
+    </div>
+    <div class="col-md-2">
+      <label for="inputdes1" class="form-label">Designation</label>
+      <input type="text" class="form-control" id="inputdes1" name="designation1">
+    </div>
+    <div class="col-md-2">
+      <label for="inputstdate1" class="form-label">Start Date</label>
+      <input type="date" class="form-control" id="inputstdate1" name="startDate1">
+    </div>
+    <div class="col-md-2">
+        <label for="inputenddate1" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="inputenddate1" name="endDate1">
+      </div>
+<br>
+    <h3>Experience 2</h3><hr>
+
+    <div class="col-md-2">
+  <label for="inputcn2" class="form-label">Company Name</label>
+  <input type="text" class="form-control" id="inputcn2" name="companyName2">
+</div>
+<div class="col-md-2">
+  <label for="inputdes2" class="form-label">Designation</label>
+  <input type="text" class="form-control" id="inputdes2" name="designation2">
+</div>
+<div class="col-md-2">
+  <label for="inputstdate2" class="form-label">Start Date</label>
+  <input type="date" class="form-control" id="inputstdate2" name="startDate2">
+</div>
+
+<div class="col-md-2">
+    <label for="inputenddate2" class="form-label">End Date</label>
+    <input type="date" class="form-control" id="inputenddate2" name="endDate2">
+  </div>
+  <br>
+
+  <div class="row-12">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+
+    </div>
+    </form>
+    
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
