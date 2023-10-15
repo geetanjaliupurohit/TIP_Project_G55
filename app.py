@@ -186,11 +186,6 @@ class Student(db.Model):
         return f'Student(id={self.id}, name={self.full_name()}, email={self.email})'
 
 
-@app.route('/add_student')
-def render_add_student():
-    return render_template('add_student.html')
-
-
 
 @app.route('/students')
 def list_students():
@@ -198,10 +193,10 @@ def list_students():
     return render_template('list_students.html', students=students)
 
 
-
-# Add a new route to handle the form submission and add student to the database
-@app.route('/add_student', methods=['POST'])
+@app.route('/add_student', methods=['GET', 'POST'])
 def add_student():
+    err_msg = 'Student not added'
+
     if request.method == 'POST':
         first_name = request.form['first_name']
         last_name = request.form['last_name']
@@ -214,9 +209,11 @@ def add_student():
         db.session.add(new_student)
         db.session.commit()
 
-        return redirect(url_for('index'))  # You can redirect to any page after adding the student
+        message = 'Student added successfully'
+        return render_template('add_student.html', message=message)
 
-    return render_template('add_student.html')  # Render the form again if the request is not POST
+    # If it's a GET request, or the form hasn't been submitted, render the form
+    return render_template('add_student.html', err_msg=err_msg)
 
 # ATTENDANCE CODE
 
@@ -248,7 +245,7 @@ def take_attendance():
         # Commit the changes to the database
         db.session.commit()
 
-        return redirect(url_for('BasicDetailsview'))
+        #return redirect(url_for('BasicDetailsview'))
 
     # Handle GET request and return a response
     students = Student.query.all()
@@ -267,6 +264,4 @@ def attendance_data():
 
 
 if __name__=="__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
