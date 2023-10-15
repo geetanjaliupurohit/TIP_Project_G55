@@ -18,15 +18,13 @@
             <th scope="col">Serial No.</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
-            <th scope="col">Designation</th>
             <th scope="col">Email</th>
-            <th scope="col">address1</th>
-            <th scope="col">address2</th>
-            <th scope="col">City</th>
-            <th scope="col">State</th>
-            <th scope="col">zipcode</th>
-            <th scope="col">Gender</th>
-            <th scope="col">Realtion Status</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Questions Asked</th>
+            <th scope="col">Discussion Summary</th>
+            <th scope="col">Date</th>
+            <th scope="col">Lecture Time</th>
+            <th scope="col">Number Of Students</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -37,15 +35,13 @@
             <th scope="row">{{loop.index}}</th>
             <td>{{basicDetails.first_name}}</td>
             <td>{{basicDetails.last_name}}</td>
-            <td>{{basicDetails.designation}}</td>
             <td>{{basicDetails.email}}</td>
-            <td>{{basicDetails.addressa}}</td>
-            <td>{{basicDetails.addressb}}</td>
-            <td>{{basicDetails.city}}</td>
-            <td>{{basicDetails.state}}</td>
-            <td>{{basicDetails.zip}}</td>
-            <td>{{basicDetails.gender}}</td>
-            <td>{{basicDetails.relation_staus}}</td>
+            <td>{{basicDetails.subject}}</td>
+            <td>{{basicDetails.questions}}</td>
+            <td>{{basicDetails.discussion}}</td>
+            <td>{{basicDetails.date}}</td>
+            <td>{{basicDetails.time}}</td>
+            <td>{{basicDetails.NoOfStudents}}</td>
             <td>
             <a href="/UpdateBasicDetails/{{basicDetails.sno}}" type="button" class="btn btn-outline-dark btn-sm mx-1">Update</button>
             <a href="/DeleteBasicDetails/{{basicDetails.sno}}" type="button" class="btn btn-outline-dark btn-sm mx-1">Delete</button>
