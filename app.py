@@ -3,7 +3,11 @@ from flask.wrappers import Request #imported flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
-
+from datetime import datetime, timedelta
+from sqlalchemy import text 
+from sqlalchemy import func, cast
+from sqlalchemy.types import Integer  # Import Integer type
+from datetime import datetime, timedelta
 
 
 
@@ -27,10 +31,6 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
-with app.app_context():
-    db.create_all()
-    print("Database tables created successfully!")
-    print("Current Working Directory:", os.getcwd())
 
 
 
@@ -53,9 +53,7 @@ def login():
             error = 'Invalid username or password'
             return render_template('login.html', error=error)
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
+
 
 
 @app.route('/timetable')
@@ -67,7 +65,8 @@ def timetable():
 
 #SESSION BASIC DETAILS TABLE
 class BasicDetails(db.Model):
-    sno = db.Column(db.Integer, primary_key=True)
+    sno=db.Column(db.Integer, primary_key=True)
+    faculty_id=db.Column(db.String(5), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False)
@@ -98,6 +97,7 @@ from flask import render_template, request
 @app.route('/BasicDetails', methods=['GET', 'POST'])
 def BasicDetailsPage():
     if request.method == 'POST':
+        faculty_id = request.form['faculty_id']
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
@@ -108,7 +108,7 @@ def BasicDetailsPage():
         time = request.form['time']
         NoOfStudents = request.form['NoOfStudents']
 
-        insert = BasicDetails(first_name=first_name, last_name=last_name, email=email, subject=subject,
+        insert = BasicDetails(faculty_id=faculty_id,first_name=first_name, last_name=last_name, email=email, subject=subject,
                               questions=questions, discussion=discussion, date=date, time=time,
                               NoOfStudents=NoOfStudents)
 
@@ -169,6 +169,63 @@ def updateBasicDetails(sno):
 
     all_basic_details = BasicDetails.query.filter_by(sno=sno).first()
     return render_template('UpdateBasicDetails.html', allBasicDetails=all_basic_details)
+
+
+@app.route('/dashboard')
+def dashboard():
+
+    # Lecture Insights Dashboard
+    today = datetime.now().date()
+    last_week_start = today - timedelta(days=today.weekday() + 7)
+    last_week_end = last_week_start + timedelta(days=6)
+
+    # Convert date strings to actual dates for comparison
+    last_week_start_str = last_week_start.strftime('%Y-%m-%d')
+    last_week_end_str = last_week_end.strftime('%Y-%m-%d')
+
+    # Number Of Lectures last Week
+    lectures_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).count()
+
+    # Average Number Of Student Last Week
+    avg_students_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).with_entities(func.avg(cast(BasicDetails.NoOfStudents, db.Integer))).scalar()
+
+    # Faculties Available Last Week
+    faculties_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).with_entities(BasicDetails.faculty_id).distinct().count()
+
+    # Recorded Faculty to Student Ratio
+    faculty_student_ratio = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).with_entities(func.round(func.sum(cast(BasicDetails.NoOfStudents, db.Integer)) / func.count(BasicDetails.faculty_id), 1)).scalar()
+
+    ##Other Dashboard 
+    # Number Of Subject Classes Last Week (total count)
+    subject_classes_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).count()
+
+
+    # Average Performance Last Week (Count number of questions in all)
+    average_performance_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).with_entities(func.sum(func.length(BasicDetails.questions) - func.length(func.replace(BasicDetails.questions, '?', ''))).label('question_count')).scalar()
+    
+    # If you want to calculate the average, you can divide by the total number of records
+    total_records_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).count()
+    
+    # Avoid division by zero
+    average_performance_last_week = average_performance_last_week / total_records_last_week if total_records_last_week > 0 else 0
+
+    # Faculties Available Last Week (count)
+    faculties_count_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).with_entities(func.count(func.distinct(BasicDetails.faculty_id)).label('faculties_count')).scalar()
+
+    faculty_student_ratio_last_week = BasicDetails.query.filter(BasicDetails.date.between(last_week_start_str, last_week_end_str)).with_entities(
+    BasicDetails.faculty_id,
+    (func.sum(cast(BasicDetails.NoOfStudents, db.Integer)) / func.count(BasicDetails.faculty_id)).label('faculty_student_ratio')
+    ).group_by(BasicDetails.faculty_id).all()
+
+
+    return render_template('dashboard.html',
+                           lectures_last_week=lectures_last_week,
+                           avg_students_last_week=avg_students_last_week,
+                           faculties_last_week=faculties_last_week,
+                           faculty_student_ratio=faculty_student_ratio,subject_classes_last_week=subject_classes_last_week,average_performance_last_week=average_performance_last_week,faculties_count_last_week =faculties_count_last_week,faculty_student_ratio_last_week=faculty_student_ratio_last_week)
+
+
+### ATTENDANCE DETAILS AND STUDENT DETAILS 
 
 
 # Define the Student model
@@ -264,4 +321,9 @@ def attendance_data():
 
 
 if __name__=="__main__":
+    with app.app_context():
+        #db.session.execute(text("DROP TABLE IF EXISTS basic_details;"))
+        db.create_all()
+        print("Database tables created successfully!")
+        print("Current Working Directory:", os.getcwd())
     app.run(debug=True)
