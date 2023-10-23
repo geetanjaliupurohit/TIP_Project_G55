@@ -310,8 +310,30 @@ def take_attendance():
 
 @app.route('/attendance_data')
 def attendance_data():
+    # Get filters from the request parameters
+    filter_date = request.args.get('filter_date')
+    filter_session = request.args.get('filter_session')
+
+    # Query all attendances
     attendances = Attendance.query.all()
-    return render_template('attendance_data.html', attendances=attendances)
+
+    # Filter attendances based on date and session ID
+    filtered_attendances = filter_attendances(attendances, filter_date, filter_session)
+
+    return render_template('attendance_data.html', attendances=filtered_attendances)
+
+def filter_attendances(attendances, filter_date, filter_session):
+    filtered_attendances = []
+
+    for attendance in attendances:
+        # Convert attendance.date to string for comparison if needed
+        attendance_date_str = attendance.date.strftime('%Y-%m-%d') if attendance.date else None
+
+        if (filter_date is None or attendance_date_str == filter_date) and \
+           (filter_session is None or attendance.session_id == filter_session):
+            filtered_attendances.append(attendance)
+
+    return filtered_attendances
 
 
 @app.route('/TwilioForm',methods=['GET','POST'])
