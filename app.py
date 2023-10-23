@@ -2,6 +2,7 @@ from flask import Flask,render_template,request,redirect,url_for
 from flask.wrappers import Request #imported flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from twilio.rest import Client
 import os
 from datetime import datetime, timedelta
 from sqlalchemy import text 
@@ -11,16 +12,10 @@ from datetime import datetime, timedelta
 
 
 
-
-
 app = Flask(__name__)#syntax to initialize app
 
 
-
 app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///BasicDetails.db"
-#app.config['SQLALCHEMY_BINDS']={'EducationDetails':"sqlite:///EducationDetails.db",
-#                                'WorkExperience':"sqlite:///WorkExperience.db",
-#                                'OtherDetails':"sqlite:///OtherDetails.db"}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db=SQLAlchemy(app)
 
@@ -66,6 +61,7 @@ def timetable():
 #SESSION BASIC DETAILS TABLE
 class BasicDetails(db.Model):
     sno=db.Column(db.Integer, primary_key=True)
+    session_id=db.Column(db.String(5), nullable=False)
     faculty_id=db.Column(db.String(5), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
@@ -98,6 +94,7 @@ from flask import render_template, request
 def BasicDetailsPage():
     if request.method == 'POST':
         faculty_id = request.form['faculty_id']
+        session_id = request.form['session_id']
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
@@ -108,7 +105,7 @@ def BasicDetailsPage():
         time = request.form['time']
         NoOfStudents = request.form['NoOfStudents']
 
-        insert = BasicDetails(faculty_id=faculty_id,first_name=first_name, last_name=last_name, email=email, subject=subject,
+        insert = BasicDetails(faculty_id=faculty_id,session_id=session_id,first_name=first_name, last_name=last_name, email=email, subject=subject,
                               questions=questions, discussion=discussion, date=date, time=time,
                               NoOfStudents=NoOfStudents)
 
@@ -276,6 +273,7 @@ def add_student():
 
 class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    session_id=db.Column(db.String(5), nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(10), nullable=False)
@@ -285,6 +283,8 @@ class Attendance(db.Model):
 @app.route('/take_attendance', methods=['GET', 'POST'])
 def take_attendance():
     if request.method == 'POST':
+
+        session_id = request.form['session_id']
         date_str = request.form['date']
 
         # Convert the date string to a datetime object
@@ -296,7 +296,7 @@ def take_attendance():
         for student in students:
             status = request.form.get(f'attendance_{student.id}')  # Use the student ID to get individual status
 
-            new_attendance = Attendance(date=date, status=status, student=student)
+            new_attendance = Attendance(date=date, status=status, student=student,session_id=session_id)
             db.session.add(new_attendance)
 
         # Commit the changes to the database
@@ -314,7 +314,29 @@ def attendance_data():
     return render_template('attendance_data.html', attendances=attendances)
 
 
+@app.route('/TwilioForm',methods=['GET','POST'])
+def TwilioForm():
+    if request.method=="POST":
+        account_sid=request.form['sid']
+        auth_token=request.form['token']
+        twwpfrom=request.form['wpfrom']
+        twwpto=request.form['wpto']
+        twmsg=request.form['msg']
 
+
+        client = Client(account_sid, auth_token)
+
+        message = client.messages \
+        .create(
+            body=twmsg,
+            from_='whatsapp:'+twwpfrom,
+            to='whatsapp:'+twwpto
+        )
+
+        print(message.sid)
+        
+
+    return render_template('TwilioForm.html')
 
 
 
@@ -323,6 +345,8 @@ def attendance_data():
 if __name__=="__main__":
     with app.app_context():
         #db.session.execute(text("DROP TABLE IF EXISTS basic_details;"))
+        #db.session.execute(text("DROP TABLE IF EXISTS Student;"))
+        #db.session.execute(text("DROP TABLE IF EXISTS Attendance;"))
         db.create_all()
         print("Database tables created successfully!")
         print("Current Working Directory:", os.getcwd())
