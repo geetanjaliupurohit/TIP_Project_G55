@@ -9,6 +9,8 @@ from sqlalchemy import text
 from sqlalchemy import func, cast
 from sqlalchemy.types import Integer  # Import Integer type
 from datetime import datetime, timedelta
+import pandas as pd
+
 
 
 
@@ -215,11 +217,35 @@ def dashboard():
     ).group_by(BasicDetails.faculty_id).all()
 
 
+        # Retrieve data from the BasicDetails table
+    all_basic_details = BasicDetails.query.all()
+
+    # Convert the data to a list of dictionaries
+    data_list = [{'sno': details.sno,
+                  'session_id': details.session_id,
+                  'faculty_id': details.faculty_id,
+                  'first_name': details.first_name,
+                  'last_name': details.last_name,
+                  'email': details.email,
+                  'subject': details.subject,
+                  'questions': details.questions,
+                  'discussion': details.discussion,
+                  'date': details.date,
+                  'time': details.time,
+                  'NoOfStudents': details.NoOfStudents
+                  } for details in all_basic_details]
+
+    # Create a DataFrame from the list of dictionaries
+    session_df = pd.DataFrame(data_list)
+
+    display_session_df = session_df.iloc[:, :5]
+
+
     return render_template('dashboard.html',
                            lectures_last_week=lectures_last_week,
                            avg_students_last_week=avg_students_last_week,
                            faculties_last_week=faculties_last_week,
-                           faculty_student_ratio=faculty_student_ratio,subject_classes_last_week=subject_classes_last_week,average_performance_last_week=average_performance_last_week,faculties_count_last_week =faculties_count_last_week,faculty_student_ratio_last_week=faculty_student_ratio_last_week)
+                           faculty_student_ratio=faculty_student_ratio,subject_classes_last_week=subject_classes_last_week,average_performance_last_week=average_performance_last_week,faculties_count_last_week =faculties_count_last_week,faculty_student_ratio_last_week=faculty_student_ratio_last_week,display_session_df = display_session_df.to_html(classes='table table-striped'))
 
 
 ### ATTENDANCE DETAILS AND STUDENT DETAILS 
@@ -361,6 +387,101 @@ def TwilioForm():
     return render_template('TwilioForm.html')
 
 
+import matplotlib.pyplot as plt
+import pandas as pd
+import io
+from flask import Response
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import numpy as np
+
+## Graphs
+#Visualisation Renders
+@app.route('/1.png')
+def plot_pngFinal1():
+
+    # Retrieve data from the BasicDetails table
+    all_basic_details = BasicDetails.query.all()
+
+    # Convert the data to a list of dictionaries
+    data_list = [{'sno': details.sno,
+                  'session_id': details.session_id,
+                  'faculty_id': details.faculty_id,
+                  'first_name': details.first_name,
+                  'last_name': details.last_name,
+                  'email': details.email,
+                  'subject': details.subject,
+                  'questions': details.questions,
+                  'discussion': details.discussion,
+                  'date': details.date,
+                  'time': details.time,
+                  'NoOfStudents': details.NoOfStudents
+                  } for details in all_basic_details]
+
+    # Create a DataFrame from the list of dictionaries
+    session_df = pd.DataFrame(data_list)
+    fig, ax = plt.subplots(figsize =(4.5,4.5))
+    v=session_df['subject'].value_counts()
+    print(v)
+    labels =  ['Mathematics','Chemistry','Biology']
+    colors = ['pink', 'silver', 'steelblue']
+    explode = [0,0.1,0.1]
+    wedge_properties = {"edgecolor":"k",'linewidth': 2}
+
+    plt.pie(v, labels=labels[:len(v)], explode=explode[:len(v)], colors=colors, startangle=30,
+               counterclock=False, shadow=True, wedgeprops=wedge_properties,
+               autopct="%1.1f%%", pctdistance=0.7, textprops={'fontsize': 10})
+
+    plt.title("Sentiment Percentage",fontsize=15)
+    plt.legend(fontsize=10)   
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+
+
+
+
+@app.route('/2.png')
+def plot_pngFinal2():
+    # Retrieve data from the BasicDetails table
+    all_basic_details = BasicDetails.query.all()
+
+    # Convert the data to a list of dictionaries
+    data_list = [{'sno': details.sno,
+                  'session_id': details.session_id,
+                  'faculty_id': details.faculty_id,
+                  'first_name': details.first_name,
+                  'last_name': details.last_name,
+                  'email': details.email,
+                  'subject': details.subject,
+                  'questions': details.questions,
+                  'discussion': details.discussion,
+                  'date': details.date,
+                  'time': details.time,
+                  'NoOfStudents': details.NoOfStudents
+                  } for details in all_basic_details]
+
+    # Create a DataFrame from the list of dictionaries
+    df = pd.DataFrame(data_list)
+
+    fig, ax = plt.subplots(figsize=(5, 5))
+
+    X = df['date']
+    noOfStudents = df['NoOfStudents']
+
+    plt.axhline(noOfStudents.mean(), color='red', ls='dotted')
+    plt.axhline(0, color='black')
+    X_axis = np.arange(len(X))
+    
+    plt.bar(X_axis - 0.2, noOfStudents, 0.4, label='No Of Students')
+
+    plt.xticks(X_axis, X)
+    plt.xlabel("Date")
+    plt.ylabel("No Of Students")
+    plt.title("No Of Students by date")
+    plt.legend()   
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
 
 
 
