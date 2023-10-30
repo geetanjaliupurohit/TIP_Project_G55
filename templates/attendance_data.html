@@ -147,12 +147,23 @@
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
 
+                    <form method="GET" action="{{ url_for('attendance_data') }}">
+                        <label for="filter_date">Filter by Date:</label>
+                        <input type="date" name="filter_date" id="filter_date">
+                    
+                        <label for="filter_session">Filter by Session ID:</label>
+                        <input type="text" name="filter_session" id="filter_session">
+                    
+                        <button type="submit">Apply Filters</button>
+                    </form>
+
                     
 
                     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                         <thead style="background-color: #f2f2f2;">
                             <tr>
                                 <th style="padding: 10px; border: 1px solid #dddddd;">Student ID</th>
+                                <th style="padding: 10px; border: 1px solid #dddddd;">Session ID</th>
                                 <th style="padding: 10px; border: 1px solid #dddddd;">Student Name</th>
                                 <th style="padding: 10px; border: 1px solid #dddddd;">Date</th>
                                 <th style="padding: 10px; border: 1px solid #dddddd;">Status</th>
@@ -162,6 +173,7 @@
                             {% for attendance in attendances %}
                                 <tr>
                                     <td style="padding: 10px; border: 1px solid #dddddd;">{{ attendance.student.id }}</td>
+                                    <td style="padding: 10px; border: 1px solid #dddddd;">{{ attendance.session_id }}</td>
                                     <td style="padding: 10px; border: 1px solid #dddddd;">{{ attendance.student.full_name() }}</td>
                                     <td style="padding: 10px; border: 1px solid #dddddd;">{{ attendance.date }}</td>
                                     <td style="padding: 10px; border: 1px solid #dddddd;">{{ attendance.status }}</td>

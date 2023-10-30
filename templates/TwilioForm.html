@@ -143,122 +143,131 @@
         <!-- ============================================================== -->
         <!-- wrapper  -->
         <!-- ============================================================== -->
-
-                    <div class="dashboard-wrapper">
-                        <div class="dashboard-ecommerce">
-                            <div class="container-fluid dashboard-content">
-                              <h1 align="center">Basic Details</h1>
-                              <div class="container">
-                            <form class="row g-3" action="/BasicDetails" method="POST">
-                                <div class="row g-3">
-                                    <div class="col">
-                                      &nbsp;&nbsp;<input type="text" class="form-control" placeholder="Session Id" aria-label="id" name="session_id">
-                                    </div>
-                                  <div class="row g-3">
-                              <div class="row g-3">
-                                <div class="col">
-                                  &nbsp;&nbsp;<input type="text" class="form-control" placeholder="Faculty Id" aria-label="id" name="faculty_id">
-                                </div>
-                              <div class="row g-3">
-                                <div class="col">
-                                  &nbsp;&nbsp;<input type="text" class="form-control" placeholder="Faculty First name" aria-label="First name" name="first_name">
-                                </div>
-                                <div class="col">
-                                  &nbsp;&nbsp;<input type="text" class="form-control" placeholder="Faculty Last name" aria-label="Last name" name="last_name">
-                                </div>
-                              </div>
-                              </div>
-                        
-                              <div class="container"> <br><br>
-                        
-                              
-                                <div class="col-md-6">
-                                  <label for="inputEmail4" class="form-label">Email</label>
-                                  <input type="email" class="form-control" id="email" name=email>
-                                </div>
-                                <div class="col-md-7">
-                                    <label for="inputDesignation" class="form-label">Subject</label>
-                                    <input type="text" class="form-control" id="subject" name="subject">
-                                  </div>
-                                <div class="col-12">
-                                  <label for="inputAddress" class="form-label">Questions Asked by Students</label>
-                                  <input type="text" class="form-control" id="discussion" name="questions">
-                                </div>
-                                <div class="col-12">
-                                  <label for="inputAddress2" class="form-label">Discussion Summary</label>
-                                  <input type="text" class="form-control" id="discussion" name="discussion">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="inputCity" class="form-label">Date (dd/mm/yyyy)</label>
-                                  <input type="date" class="form-control" id="inputCity" name="date">
-                                </div>
-                                <div class="col-md-4">
-                                  <label for="inputState" class="form-label">Lecture Time (hh:mm)</label>
-                                  <input type="text" class="form-control" id="time" name="time">
-                        
-                                </div>
-                                <div class="col-md-2">
-                                  <label for="inputZip" class="form-label">Number Of Students</label>
-                                  <input type="text" class="form-control" id="NoOfStudents" name="NoOfStudents">
-                                </div>
-                          
-                               
-                                <br><br>
-                                <div class="row-12">
-                                  <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
-                                <br>
-                                <div class="row-12">
-                                    <a class="btn btn-primary" href="/BasicDetailsview">View Details</a>
-                                  </div>
-                              </div>
-                            </form>
-                            
-                        
-                            <!-- Optional JavaScript; choose one of the two! -->
-                        
-                            <!-- Option 1: Bootstrap Bundle with Popper -->
-                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-                        
-                    
-
-            <br><br><br>
-
-            <div class="footer">
-                <div class="container-fluid">
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
                     <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                             Copyright@2023 G 55</a>.
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Twilio Insight Notes</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Alerts</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Twilio Insight Notes</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+          
+    
+		<div class="container">
+			<div class="contact100-map" id="google_map" data-map-x="40.722047" data-map-y="-73.986422" data-pin="images/icons/map-marker.png" data-scrollwhell="0" data-draggable="1"></div>
+		
+			<div class="wrap-contact100">
+			  <form class="contact100-form validate-form" action="/TwilioForm" method="post">
+				<span class="contact100-form-title">
+				  Send a note to your Whatsapp, to remind you of analysis, tweets filtered, notes.
+				</span>
+                <br>
+           
+		
+                <div class="col-75">
+				  <input class="input100" type="text" name="sid" placeholder=" Twilio SID" id="sid">
+				  <span class="focus-input100"></span>
+				</div>
+		
+	  
+                <div class="col-75">
+				  <input class="input100" type="text" name="token" placeholder="Twilio Token" id="token">
+				  <span class="focus-input100"></span>
+				</div>
+             
+	  
+                <div class="col-75">
+				  <input class="input100" type="text" name="wpfrom" placeholder=" Whatsapp No From." id="wpfrom">
+				  <span class="focus-input100"></span>
+				</div>
+              
+	  
+                <div class="col-75">
+				  <input class="input100" type="text" name="wpto" placeholder="Whatsapp No To." id="wpto">
+				  <span class="focus-input100"></span>
+				</div>
+            
+		
+			  
+                <div class="col-75">
+				  <textarea class="input100" name="msg" placeholder="Enter Msg" id="msg"></textarea>
+				  <span class="focus-input100"></span>
+				</div>
+                <center>
+				<div class="col-75">
+				  <button onclick="myFunction()" class="contact100-form-btn">
+					Send Alert
+				  </button>
+				</div>
+            </center>
+			  </form>
+		
+			</div>
+		  </div>
+    </div>
+</div>
+</div>
+
+
+
 
         </div>
-
+        <!-- ============================================================== -->
+        <!-- end wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+   
+    <div class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                     Copyright@2023 G 55</a>.
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jquery 3.3.1 -->
-    <script src="static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
-    <!-- bootstap bundle js -->
-    <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-    <!-- slimscroll js -->
-    <script src="static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
-    <!-- main js -->
-    <script src="static/assets/libs/js/main-js.js"></script>
-    <!-- chart chartist js -->
-    <script src="static/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
-    <!-- sparkline js -->
-    <script src="static/assets/vendor/charts/sparkline/jquery.sparkline.js"></script>
-    <!-- morris js -->
-    <script src="static/assets/vendor/charts/morris-bundle/raphael.min.js"></script>
-    <script src="static/assets/vendor/charts/morris-bundle/morris.js"></script>
-    <!-- chart c3 js -->
-    <script src="static/assets/vendor/charts/c3charts/c3.min.js"></script>
-    <script src="static/assets/vendor/charts/c3charts/d3-5.4.0.min.js"></script>
-    <script src="static/assets/vendor/charts/c3charts/C3chartjs.js"></script>
-    <script src="static/assets/libs/js/dashboard-ecommerce.js"></script>
+</div>
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jquery 3.3.1 -->
+<script src="static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+<!-- bootstap bundle js -->
+<script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+<!-- slimscroll js -->
+<script src="static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
+<!-- main js -->
+<script src="static/assets/libs/js/main-js.js"></script>
+<!-- chart chartist js -->
+<script src="static/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
+<!-- sparkline js -->
+<script src="static/assets/vendor/charts/sparkline/jquery.sparkline.js"></script>
+<!-- morris js -->
+<script src="static/assets/vendor/charts/morris-bundle/raphael.min.js"></script>
+<script src="static/assets/vendor/charts/morris-bundle/morris.js"></script>
+<!-- chart c3 js -->
+<script src="static/assets/vendor/charts/c3charts/c3.min.js"></script>
+<script src="static/assets/vendor/charts/c3charts/d3-5.4.0.min.js"></script>
+<script src="static/assets/vendor/charts/c3charts/C3chartjs.js"></script>
+<script src="static/assets/libs/js/dashboard-ecommerce.js"></script>
 </body>
- 
+
 </html>
